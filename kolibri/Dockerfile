@@ -8,9 +8,7 @@ RUN git clone https://github.com/KolibriNet/KolibriNetServer.git /home/play/koli
 
 # compile
 WORKDIR /home/play/kolibri
-RUN ./sbt clean  
-RUN ./sbt compile 
-RUN ./sbt stage
+RUN ./sbt clean compile stage 
 
 # make port 9000 available to the outside world as port 80
 EXPOSE 80:9000
