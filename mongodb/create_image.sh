@@ -26,6 +26,7 @@ fi
 
 # create local directory for data and secrets
 mkdir -p $DATA_DIR/data
+mkdir -p $DATA_DIR/secrets
 
 # copy resources
 cp resources/* $DATA_DIR/data/
@@ -37,9 +38,8 @@ sudo docker build -t $IMAGE_NAME .
 sudo docker run -v $DATA_DIR/data:/data:rw -entrypoint="/data/create_database.sh" -e DATABASE_NAME=$DATABASE_NAME -e DATABASE_USER=$DATABASE_USER -e DATABASE_PASS=$DATABASE_PASS $IMAGE_NAME
 
 # write secrets to file
-cat > $DATA_DIR/secrets.conf << EOF
+cat > $DATA_DIR/secrets/mongodb << EOF
 DATABASE_NAME=$DATABASE_NAME
 DATABASE_USER=$DATABASE_USER
 DATABASE_PASS=$DATABASE_PASS
 EOF
-
