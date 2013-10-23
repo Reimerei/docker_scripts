@@ -1,11 +1,11 @@
 #!/bin/bash
 ############################################################################################
 #
-# MongoDB - Init
+# MongoDB - Create Image
 #
-# Creates an new mongodb container with an external data directory.
-# Database and User are created. They can be used by any container that mounts the 
-# data directory
+# Creates an new mongodb image with an external data directory.
+# New Database and User are created in that directory. 
+# They can be used by any image that mounts the data directory.
 #
 ############################################################################################
 
@@ -17,6 +17,7 @@ DATABASE_NAME=kolibri
 DATABASE_USER=kolibri
 DATABASE_PASS=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w20 | head -n1)
 DATA_DIR=$HOME/mongodb
+IMAGE_NAME=mongodb
 
 if [ -e $DATA_DIR ]; then
 	echo The data directory "$DATA_DIR" already exists. Delete before creating a new database
@@ -30,10 +31,10 @@ mkdir -p $DATA_DIR/data
 cp resources/* $DATA_DIR/data/
 
 # build docker image
-sudo docker build -t mongodb .
+sudo docker build -t $IMAGE_NAME .
 
 # create database
-sudo docker run -v $DATA_DIR/data:/data:rw -entrypoint="/data/create_database.sh" -e DATABASE_NAME=$DATABASE_NAME -e DATABASE_USER=$DATABASE_USER -e DATABASE_PASS=$DATABASE_PASS mongodb
+sudo docker run -v $DATA_DIR/data:/data:rw -entrypoint="/data/create_database.sh" -e DATABASE_NAME=$DATABASE_NAME -e DATABASE_USER=$DATABASE_USER -e DATABASE_PASS=$DATABASE_PASS $IMAGE_NAME
 
 # write secrets to file
 cat > $DATA_DIR/secrets.conf << EOF

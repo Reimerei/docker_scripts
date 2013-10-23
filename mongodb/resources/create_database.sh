@@ -2,19 +2,16 @@
 set -e
 
 # start mongod
-echo Starting mongodb for the first time, this might take some time
+echo Preallocating mongodb files in the data directory, this might take some time
 mongod -f /data/mongodb.conf &>/dev/null &
+pid=$!
 
 # script to create database
-cat > /tmp/create_db.js << EOF
-db = db.getSiblingDB('<$DATABASE_NAME>')
+cat > /tmp/add_user.js << EOF
 db.addUser( { user: "$DATABASE_USER",
               pwd: "$DATABASE_PASS",
               roles: [ "readWrite", "dbAdmin" ]
             } )
-// shutdown
-db = db.getSiblingDB('<admin>')
-db.shutdownServer()
 EOF
 
 # wait untill mongod accepts connection
@@ -25,7 +22,11 @@ done
 
 # run script
 echo Creating Database: $DATABASE_NAME
-mongo /tmp/create_db.js --quiet
+mongo $DATABASE_NAME /tmp/add_user.js --quiet
 
 # delete script
-rm /tmp/create_db.js
+rm /tmp/add_user.js
+
+# stop mongo
+echo Stopping mongo
+kill -2 $pid

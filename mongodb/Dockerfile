@@ -11,5 +11,7 @@ RUN echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
 RUN apt-get update -y
 RUN apt-get upgrade
 RUN apt-get install mongodb-10gen=2.4.6
+
+EXPOSE 27017
  
 ENTRYPOINT ["mongod", "-f", "/data/mongodb.conf"]
