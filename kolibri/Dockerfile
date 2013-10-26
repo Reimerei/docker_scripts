@@ -1,20 +1,13 @@
-FROM reimerei/play2_base
-
-# run as user play
-USER play
+FROM play2_base
 
 # get latest version of kolibrinet from github
-RUN git clone https://github.com/KolibriNet/KolibriNetServer.git /home/play/kolibri
+RUN git clone https://github.com/KolibriNet/KolibriNetServer.git /opt/kolibri
 
-# compile
-WORKDIR /home/play/kolibri
-RUN ./sbt clean compile stage 
+# run build scipt
+ENV APP_DIR /opt/kolibri
+RUN /opt/build.sh 
 
-# make port 9000 available to the outside world as port 80
-EXPOSE 80:9000
+# add scripts for updating
+ADD resources/update.sh /opt/update.sh
 
-# workaround to be able to resolve localhost from within Java
-#RUN sed -i "s/^127.0.0.1/127.0.0.1 $(hostname) /" /etc/hosts
-
-USER root
-ENTRYPOINT sed -i "s/^127.0.0.1/127.0.0.1 $(hostname) /" /etc/hosts && less /etc/hosts && su play -c "/home/play/kolibri/sbt run"
+#ENTRYPOINT /opt/start.sh
