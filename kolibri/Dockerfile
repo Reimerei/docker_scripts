@@ -3,7 +3,7 @@ FROM play2_base
 # get latest version of kolibrinet from github
 RUN git clone https://github.com/KolibriNet/KolibriNetServer.git /opt/kolibri
 
-# run build scipt
+# build app 
 ENV APP_DIR /opt/kolibri
 RUN /opt/build.sh 
 

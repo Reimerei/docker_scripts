@@ -26,6 +26,7 @@ mongo $DATABASE_NAME /tmp/add_user.js --quiet
 
 # delete script
 rm /tmp/add_user.js
+sleep 2
 
 # stop mongo
 echo Stopping mongo
