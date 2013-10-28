@@ -8,9 +8,6 @@
 #
 ############################################################################################
 
-# quit if anything goes wrong
-set -e
-
 # Config
 IMAGE_NAME=mongodb
 DATA_DIR=$HOME/mongodb
@@ -20,4 +17,11 @@ if [ ! -d $DATA_DIR ]; then
 	exit 1
 fi
 
-sudo docker run -d -v $DATA_DIR/data:/data:rw $IMAGE_NAME
+# check if the image is already running
+sudo docker ps | grep $IMAGE_NAME:
+if [ $? -eq "0" ]; then
+	echo Another mongodb image is running. Exiting...
+	exit 1
+fi
+
+sudo docker run -d -v $DATA_DIR/data:/data:rw $IMAGE_NAME -e 
