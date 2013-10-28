@@ -8,10 +8,15 @@
 #
 ############################################################################################
 
+set -e
+
 # Config
 INSTANCE_NAME=kolibri
 IMAGE_NAME=kolibri
 DATA_DIR=$HOME/$INSTANCE_NAME
+PLAY_PARAMS=-Dconfig.file=/data/${INSTANCE_NAME}.conf
+
+echo play params: $PLAY_PARAMS
 
 if [ ! -d $DATA_DIR ]; then
 	echo The data dir does not exist: $DATA_DIR
@@ -22,4 +27,7 @@ fi
 echo "Starting database"
 ../mongodb/run_image.sh
 
-sudo docker run -d -v $DATA_DIR:/data:rw $IMAGE_NAME -e PLAY_PARAMS="-Dconfig.resource=/data/${INSTANCE_NAME}.conf"
+#generate config
+./generate_config.sh $INSTANCE_NAME
+
+sudo docker run -d -v $DATA_DIR:/data:rw -e PLAY_PARAMS=$PLAY_PARAMS $IMAGE_NAME

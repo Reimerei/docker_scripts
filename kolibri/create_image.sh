@@ -39,24 +39,7 @@ else
 			cd -
 		fi
 	fi
-
-	# load database credentials
-	source $SECRETS_FILE
-
-	# write play config file
-	cat > $DATA_DIR/${INSTANCE_NAME}.conf << EOF
-
-	# load docker.conf from repository
-	inclue "docker"
-
-	# set database url
-	# TODO: setup ip and port
-	mongodb.uri="mongodb://${DATABASE_USER}:${DATABASE_PASS}@localhost:27017/${DATABASE_NAME}"
-EOF
 fi
 
 # build docker image.
 sudo docker build -t $IMAGE_NAME .
-
-
-
